@@ -1,0 +1,9 @@
+{
+  "name": "react-dog_api",
+  "version": "1.0.0",
+  "description": "A react application consuming dog-api",
+  "main": "index.js",
+  "repository": "https://github.com/pastoremetal/react-dog_api.git",
+  "author": "pastoremetal",
+  "license": "MIT"
+}
