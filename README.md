@@ -1,15 +1,31 @@
-# 🚀 Welcome to your new awesome project!
+# React Dog API
 
-This project has been created using **webpack scaffold**, you can now run
-
+## Installing project
 ```
-npm run build
+yarn
 ```
 
-or
+## Run on development
+```
+yarn develop
+```
 
+## Build
 ```
 yarn build
 ```
 
-to bundle your application
+## Serve app
+```
+yarn start
+```
+
+## Run linter
+```
+yarn lint
+```
+
+## Run test
+```
+yarn test
+```
