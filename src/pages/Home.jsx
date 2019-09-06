@@ -10,45 +10,69 @@ import {
   FormControl,
   NativeSelect,
   FormHelperText,
-  Avatar
+  TextField,
+  Avatar,
+  Typography,
+  Button
 } from "@material-ui/core";
 import { deepOrange } from "@material-ui/core/colors";
 import Layout from "../components/Layout";
 import { apiGetBreeds } from "./utils";
-import { fetchBreeds, setSelectedBred } from "../redux/actions/breeds";
+import * as Actions from "../redux/actions/dogo";
 import {
   getBreeds,
   getSelectedBreed,
-  getBreedImage
-} from "../redux/selectors/breeds";
+  getBreedImage,
+  getName,
+  getList
+} from "../redux/selectors/dogo";
 import defaultImage from "../static/anonymous.png";
 
 type HomeProps = {
   breeds: Array<string>,
+  selectedBreed?: string,
   searchImage?: string,
-  onSetSelectedBreed: string
+  onSetSelectedBreed: string => void,
+  name: string,
+  onSetName: string => void
 };
 
 const StyledAvatar = styled(Avatar)`
   && {
-    width: 8rem;
-    height: 8rem;
+    width: 12rem;
+    height: 12rem;
     background-color: ${deepOrange[300]};
     margin: 0 auto;
+    margin-top: 2rem;
 
     > img {
-      color: papayawhip;
       object-fit: ${props =>
         props.src === defaultImage ? "contain" : "cover"};
     }
   }
 `;
 
-const Home = ({ breeds, searchImage, onSetSelectedBreed }: HomeProps) => (
+const StyledTypography = styled(Typography)`
+  position: absolute;
+  width: 100%;
+  top: 75%;
+`;
+
+const Home = ({
+  breeds,
+  selectedBreed,
+  searchImage,
+  onSetSelectedBreed,
+  name,
+  onSetName,
+  onSubmit,
+  list
+}: HomeProps) => (
   <Layout title="Choose your dogo">
     <Box display="flex" alignItems="center" flexWrap="wrap">
       <Box width={{ xs: 1, md: 1 / 2 }}>
         <FormControl fullWidth>
+          <FormHelperText>Dogo's breed</FormHelperText>
           <NativeSelect
             name="race"
             inputProps={{ "aria-label": "race" }}
@@ -62,29 +86,70 @@ const Home = ({ breeds, searchImage, onSetSelectedBreed }: HomeProps) => (
                 </option>
               ))}
           </NativeSelect>
-          <FormHelperText>Dogo's breed</FormHelperText>
         </FormControl>
+        {selectedBreed && (
+          <TextField
+            length="20"
+            fullWidth
+            label="Dogo's name"
+            margin="normal"
+            onChange={e => onSetName(e.target.value)}
+            inputProps={{ maxLength: 10 }}
+          />
+        )}
       </Box>
-      <Box width={{ xs: 1, md: 1 / 2 }}>
+      <Box position="relative" width={{ xs: 1, md: 1 / 2 }}>
         <StyledAvatar src={searchImage || defaultImage} />
+        <StyledTypography
+          variant="h5"
+          color="error"
+          component="p"
+          align="center"
+        >
+          {name || ""}
+        </StyledTypography>
       </Box>
     </Box>
+    {selectedBreed && name && (
+      <Box
+        mt={{ xs: "2rem", md: "0" }}
+        textAlign={{ xs: "center", md: "left" }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => onSubmit(name, selectedBreed, searchImage)}
+        >
+          Salvar
+        </Button>
+      </Box>
+    )}
+    {list && (
+      <Box width="1" display="flex" alignItems="center" flexWrap="wrap">
+        
+      </Box>
+    )}
   </Layout>
 );
 
 Home.defaultProps = {
+  selectedBreed: null,
   searchImage: defaultImage
 };
 
 const mapStateToProps = store => ({
   breeds: getBreeds(store),
   selectedBreed: getSelectedBreed(store),
-  searchImage: getBreedImage(store)
+  searchImage: getBreedImage(store),
+  name: getName(store),
+  list: getList(store)
 });
 
 const mapActions = {
-  onFetchBreeds: fetchBreeds,
-  onSetSelectedBreed: setSelectedBred
+  onFetchBreeds: Actions.fetchBreeds,
+  onSetSelectedBreed: Actions.setSelectedBred,
+  onSetName: Actions.setName,
+  onSubmit: Actions.addToList
 };
 
 export default compose(
