@@ -27,6 +27,7 @@ import {
   getList
 } from "../redux/selectors/dogo";
 import defaultImage from "../static/anonymous.png";
+import CardList from "../components/CardList";
 
 type HomeProps = {
   breeds: Array<string>,
@@ -34,7 +35,9 @@ type HomeProps = {
   searchImage?: string,
   onSetSelectedBreed: string => void,
   name: string,
-  onSetName: string => void
+  onSetName: string => void,
+  onSubmit: (string, string, string) => void,
+  list: Array<Object>
 };
 
 const StyledAvatar = styled(Avatar)`
@@ -124,11 +127,7 @@ const Home = ({
         </Button>
       </Box>
     )}
-    {list && (
-      <Box width="1" display="flex" alignItems="center" flexWrap="wrap">
-        
-      </Box>
-    )}
+    {list.length > 0 && <CardList list={list} />}
   </Layout>
 );
 
